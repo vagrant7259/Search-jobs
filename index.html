@@ -1,13 +1,75 @@
+<?php
+    session_start();
+    //Inclure la page de connexion
+    include_once "con_bdd.php";
+    // if(!$_SESSION['pseudo']){
+    //     header('Location:../index.php');
+    // }
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>SearchJobs-GitHub</title>
+    <title>Liste des photos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style-2.css">
 </head>
 <body>
-    <h1>Le premier site qu'un non expérimenté a eux l'idée de faire</h1>
+    <div class="container">
+        <ul class="navigation">
+            <div class="box-shadow">
+                <a href="pages/profil.php" class="link-nav">
+                    <li><img src="img/person.png"><br><p>Profile</p></li>
+                </a>    
+            </div>
+            <div class="box-shadow">
+                <a href="pages/groupe.php" class="link-nav">
+                    <li><img src="img/groups.png"><br><p>Groupe</p></li>
+                </a>    
+            </div>
+            <div class="box-shadow">
+                <a href="pages/notification.php" class="link-nav">
+                    <li><img src="img/notifications.png"><br><p>Notificat</p></li>
+                </a>    
+            </div>
+        </ul> 
+    </div>
+    <p class="error">
+        <?php
+            //Affiche un message d'erreur si la variable message existe
+            if (isset($message_error)) echo $message_error;
+        ?>
+    </p>
+    <section>
+        <a href="pages/groupe-id.php" class="link">Ajouter un projet sur le site</a>
+        <?php
+            //inclure la page de connexion
+            include_once "con_bdd.php";
+            //afficher la liste des photos qui sont dans la base de donnée
+            $req = mysqli_query($con , "SELECT * FROM images");
+
+            //vérifier que la liste n'est pas vide
+            if(mysqli_num_rows($req) < 1) {
+                ?>
+                <p class="error">La liste des photo est vide.</p>
+                <?php
+            }
+
+            //afficher la des photos
+            while ($row = mysqli_fetch_assoc($req)) {
+                ?>
+                    <div class="box">
+                        <a href=""><video class="image_pricipal" src="image_bdd/<?=$row['img']?>" controls></a>
+                        <div style="color:#000;"><?=$row['txt']?></div>
+                        <a href="delete.php?id=<?=$row['id']?>" class="delete_btn">
+                            <img src="img/UnconnectServer.png">
+                        </a>
+                    </div>
+                <?php
+            }
+        ?>
+    </section>
 </body>
 </html>
